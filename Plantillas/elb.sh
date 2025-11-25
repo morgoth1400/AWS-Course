@@ -53,8 +53,6 @@ echo "ID de la instancia Green: " $GREEN_ID
 aws ec2 wait instance-running \
         --instance-ids $GREEN_ID
 
-sleep 15
-
 
 TG_ARN=$(aws elbv2 create-target-group \
         --name tg-script\
