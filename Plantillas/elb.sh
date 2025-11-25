@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SG_ID=$(aws ec2 describe-security-groups \
         --group-names GS-WebServer \
         --query "SecurityGroups[*].{Id:GroupId}" --output text
@@ -25,9 +27,13 @@ BLUE_ID=$(aws ec2 run-instances \
         --subnet-id $SUBNET_ID \
         --user-data "file://./userdataB.txt" \
         --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Blue}]' \
-        --query 'Instances[*].InstanceId' --output text)
+        --query 'Instances[*].InstanceId' --output text
+)
 
 echo "ID de la instancia Blue: " $BLUE_ID
+
+aws ec2 wait instance-running \
+        --instance-ids $BLUE_ID
 
 GREEN_ID=$(aws ec2 run-instances \
         --image-id ami-0fa3fe0fa7920f68e \
@@ -39,9 +45,15 @@ GREEN_ID=$(aws ec2 run-instances \
         --subnet-id $SUBNET_ID \
         --user-data "file://./userdataG.txt" \
         --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Green}]' \
-        --query 'Instances[*].InstanceId' --output text)
+        --query 'Instances[*].InstanceId' --output text
+)
 
 echo "ID de la instancia Green: " $GREEN_ID
+
+aws ec2 wait instance-running \
+        --instance-ids $GREEN_ID
+
+sleep 15
 
 
 TG_ARN=$(aws elbv2 create-target-group \
@@ -50,9 +62,8 @@ TG_ARN=$(aws elbv2 create-target-group \
         --port 80 \
         --vpc-id $VPC_ID \
         --target-type instance \
-        --query "TargetGroups[0].TargetGroupArn" --output text)
-
-
+        --query "TargetGroups[0].TargetGroupArn" --output text
+)
 
 aws elbv2 register-targets \
         --target-group-arn $TG_ARN \
@@ -71,7 +82,6 @@ aws elbv2 create-listener \
         --protocol HTTP \
         --port 80 \
         --default-actions Type=forward,TargetGroupArn=$TG_ARN
-
 
 DNS_NAME=$(aws elbv2 describe-load-balancers \
     --load-balancer-arns $ELB_ARN \
