@@ -8,8 +8,8 @@
                 "s3:ListBucket"
             ],
             "Resource": [
-                "arn:aws:s3:::c182263a4694276l12726190t1w857277227736-bucket1-fgbzhsgeqdl4",
-                "arn:aws:s3:::c182263a4694276l12726190t1w857277227736-bucket1-fgbzhsgeqdl4/*"
+                "arn:aws:s3:::c182263a4694276l12726190t1w730335670401-bucket1-fffo2n0hni3k",
+                "arn:aws:s3:::c182263a4694276l12726190t1w730335670401-bucket1-fffo2n0hni3k/*"
             ],
             "Effect": "Allow"
         }
