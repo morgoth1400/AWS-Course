@@ -1,0 +1,14 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+#mensaje {
+    font-size: 4rem;
+    transition: transform 0.4s ease;
+    cursor: pointer;
+}
