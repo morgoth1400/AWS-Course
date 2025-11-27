@@ -1,16 +1,20 @@
 #!/bin/bash
 GSNAME="GS-WEBMIN"
 
-EXISTING_SG=$(aws ec2 describe-security-groups \
-    --group-names "$GSNAME" \
-    --query "SecurityGroups[0].GroupId" \
-    --output text 2>/dev/null)
+# Esta parte es para eliminar el grupo de seguridad
+# por si se ejecuta el script más de una vez, para 
+# que no de errores.
 
-if [ "$EXISTING_SG" != "None" ] && [ -n "$EXISTING_SG" ]; then
-    echo "Borrando Security Group existente: $EXISTING_SG"
-    aws ec2 delete-security-group --group-id "$EXISTING_SG"
+# EXISTING_SG=$(aws ec2 describe-security-groups \
+#     --group-names "$GSNAME" \
+#     --query "SecurityGroups[0].GroupId" \
+#     --output text 2>/dev/null)
 
-fi
+# if [ "$EXISTING_SG" != "None" ] && [ -n "$EXISTING_SG" ]; then
+#     echo "Borrando Security Group existente: $EXISTING_SG"
+#     aws ec2 delete-security-group --group-id "$EXISTING_SG"
+
+# fi
 
 
 aws ec2 create-security-group \
