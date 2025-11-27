@@ -1,6 +1,7 @@
 
 aws elasticbeanstalk create-application \
     --application-name blue
+    
 aws elasticbeanstalk create-application-version \
     --application-name blue \
     --version-label v1 \
