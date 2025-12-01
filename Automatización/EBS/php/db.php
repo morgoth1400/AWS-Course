@@ -1,14 +1,12 @@
 <?php
-$host = $_SERVER['RDS_HOSTNAME'];
-$user = $_SERVER['RDS_USERNAME'];
-$pass = $_SERVER['RDS_PASSWORD'];
+$dbhost = $_SERVER['RDS_HOSTNAME'];
+$dbport = $_SERVER['RDS_PORT'];
 $dbname = $_SERVER['RDS_DB_NAME'];
-$port = $_SERVER['RDS_PORT'];
+$charset = 'utf8' ;
 
-$conn = new mysqli($host, $user, $pass, $dbname, $port);
+$dsn = "mysql:host={$dbhost};port={$dbport};dbname={$dbname};charset={$charset}";
+$username = $_SERVER['RDS_USERNAME'];
+$password = $_SERVER['RDS_PASSWORD'];
 
-if ($conn->connect_errno) {
-    echo "Error de conexión: " . $conn->connect_error;
-    exit();
-}
+$pdo = new PDO($dsn, $username, $password);
 ?>

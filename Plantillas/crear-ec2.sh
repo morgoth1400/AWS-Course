@@ -121,7 +121,7 @@
         --private-ip-address 192.168.0.100 \
         --count 1 \
         --key-name vockey \
-        --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Hector-Instance}]' \
+        --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Dani-Ubuntu}]' \
         --query 'Instances[*].InstanceId' --output text)
 
     ### ESPERAMOS HASTA QUE SE CREE LA INSTANCIA
