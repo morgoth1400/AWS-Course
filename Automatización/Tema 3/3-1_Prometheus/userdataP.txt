@@ -1,0 +1,76 @@
+#!/bin/bash
+# Actualizar el sistema
+sudo yum update -y
+
+# Crear usuario Prometheus
+sudo useradd --no-create-home --shell /bin/false prometheus
+
+# Crear directorios necesarios
+sudo mkdir /etc/prometheus
+sudo mkdir /var/lib/prometheus
+sudo mkdir -p /etc/prometheus/consoles
+sudo mkdir -p /etc/prometheus/console_libraries
+
+# Descargar Prometheus
+cd /tmp
+wget https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz
+
+# Extraer los archivos de Prometheus
+tar xvfz prometheus-2.47.0.linux-amd64.tar.gz
+cd prometheus-2.47.0.linux-amd64
+
+# Mover archivos binarios
+sudo mv prometheus /usr/local/bin/
+sudo mv promtool /usr/local/bin/
+
+# Mover los archivos de configuración
+sudo mv prometheus.yml /etc/prometheus/prometheus.yml
+sudo mv consoles /etc/prometheus/consoles
+sudo mv console_libraries /etc/prometheus/console_libraries
+
+# Ajustar permisos
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown -R prometheus:prometheus /var/lib/prometheus
+
+# Crear archivo de configuración de Prometheus
+cat <<EOF | sudo tee /etc/prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['172.31.22.230:9100']
+EOF
+
+# Reemplaza 98.81.140.20 con la dirección IP privada de la instancia que quieres monitorear
+# Si necesitas más instancias, agrega más direcciones IP en el bloque targets.
+
+# Crear archivo de servicio para Prometheus
+cat <<EOF | sudo tee /etc/systemd/system/prometheus.service
+[Unit]
+Description=Prometheus Monitoring System
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus/ \
+  --web.console.templates=/etc/prometheus/consoles \
+  --web.console.libraries=/etc/prometheus/console_libraries
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Recargar el demonio de systemd para que reconozca el nuevo servicio
+sudo systemctl daemon-reload
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+
+# Verificación final (opcional)
+echo "Prometheus ha sido instalado y está monitoreando la IP: 172.31.22.230"
