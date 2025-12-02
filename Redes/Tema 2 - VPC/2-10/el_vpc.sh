@@ -1,6 +1,6 @@
 # Obtén los IDs de las VPCs que tienen la etiqueta entorno=prueba
 VPC_IDS=$(aws ec2 describe-vpcs \
-    --filters "Name=tag:entorno,Values=pruebas" \
+    --filters "Name=tag:Name,Values=pruebas" \
     --query "Vpcs[*].VpcId" \
     --output text)
 echo $VPC_ID
