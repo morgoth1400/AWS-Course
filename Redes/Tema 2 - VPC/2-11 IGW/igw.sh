@@ -86,7 +86,7 @@ SG=$(aws ec2 create-security-group --group-name My-SG \
     --output text)
 
 SG_ID=$(echo "$SG" | awk '{print $1}')
-SG_ARN=$(echo "$SG" | awk '{print $2}')
+SG_ARN=$(echo "$SG" | awk '{print $0}')
 
 echo "ID del grupo de seguridad: $SG_ID"
 echo "ARN del grupo de seguridad: $SG_ID_ARN"
@@ -128,7 +128,7 @@ EC2_ID=$(aws ec2 run-instances \
 
 aws ec2 wait instance-running --instance-ids $EC2_ID
 
-echo "ID de la instancia: $EC2_ID"
+echo "ID de la instancia con acceso a internet: $EC2_ID"
 
 
 
@@ -147,7 +147,7 @@ EC2_ID=$(aws ec2 run-instances \
 
 aws ec2 wait instance-running --instance-ids $EC2_ID
 
-echo "ID de la instancia: $EC2_ID"
+echo "ID de la instancia sin internet: $EC2_ID"
 
 ## ASIGNACIÓN POSTERIOR - GRUPO DE SEGURIDAD (OPCIONAL)
 # aws ec2 modify-instance-attribute \
