@@ -1,0 +1,11 @@
+#!/bin/bash
+apt update -y
+apt install curl gnupg -y
+mkdir -p /root/webmin-setup
+cd /root/webmin-setup
+curl -O https://raw.githubusercontent.com/webmin/webmin/master/setup-repos.sh
+chmod +x setup-repos.sh
+./setup-repos.sh -f
+apt update -y && apt-get upgrade -y
+apt install webmin -y
+/usr/share/webmin/changepass.pl /etc/webmin/ root juande123
